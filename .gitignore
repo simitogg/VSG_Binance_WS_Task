@@ -1,0 +1,10 @@
+
+/Commons/bin
+/DataCollector/bin
+/RequestHandler/bin
+/SimpleConsoleApp/bin
+/SimpleConsoleApp/obj
+/RequestHandler/obj
+/DataCollector/obj
+/Commons/obj
+/.vs
