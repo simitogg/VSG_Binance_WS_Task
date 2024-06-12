@@ -22,8 +22,8 @@ namespace RequestHandler.BusinessLayer
             var endTime = DateTime.UtcNow;
             var startTime = endTime.AddDays(-1);
 
-            var cacheKey = $"{symbol}-24hAvgPrice";
-            if (!_cache.TryGetValue(cacheKey, out decimal? averagePrice))
+            var cacheId = $"{symbol}/24hAvgPrice";
+            if (!_cache.TryGetValue(cacheId, out decimal? averagePrice))
             {
                 // Fetch the records for the last 24 hours
                 var records = await _context.SymbolRecords
@@ -48,7 +48,7 @@ namespace RequestHandler.BusinessLayer
                 // Cache the result
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(_cacheExpirationMinutes));
-                _cache.Set(cacheKey, averagePrice, cacheEntryOptions);
+                _cache.Set(cacheId, averagePrice, cacheEntryOptions);
             }
 
             return averagePrice;
@@ -56,8 +56,8 @@ namespace RequestHandler.BusinessLayer
 
         public async Task<decimal?> GetSimpleMovingAverageAsync(string symbol, int numberOfDataPoints, string timePeriod, DateTime? startDateTime = null)
         {
-            var cacheKey = $"{symbol}-SMA-{numberOfDataPoints}-{timePeriod}-{startDateTime}";
-            if (!_cache.TryGetValue(cacheKey, out decimal? sma))
+            var cacheId = $"{symbol}/SMA/{numberOfDataPoints}-{timePeriod}-{startDateTime}";
+            if (!_cache.TryGetValue(cacheId, out decimal? sma))
             {
                 var query = _context.SymbolRecords.AsQueryable();
 
@@ -96,7 +96,7 @@ namespace RequestHandler.BusinessLayer
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(_cacheExpirationMinutes));
-                _cache.Set(cacheKey, sma, cacheEntryOptions);
+                _cache.Set(cacheId, sma, cacheEntryOptions);
             }
 
             return sma;
